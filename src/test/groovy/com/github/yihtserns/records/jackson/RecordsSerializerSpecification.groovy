@@ -7,15 +7,15 @@ import spock.lang.Specification
 import java.time.Year
 import java.time.ZoneId
 
-import static com.github.yihtserns.records.jackson.TestRecords.DateTime
-import static com.github.yihtserns.records.jackson.TestRecords.MultipleConstructor
-import static com.github.yihtserns.records.jackson.TestRecords.NonRecord
-import static com.github.yihtserns.records.jackson.TestRecords.SingleEnum
-import static com.github.yihtserns.records.jackson.TestRecords.SingleInteger
-import static com.github.yihtserns.records.jackson.TestRecords.SingleIntegerWrapper
-import static com.github.yihtserns.records.jackson.TestRecords.SingleList
-import static com.github.yihtserns.records.jackson.TestRecords.SingleNested
-import static com.github.yihtserns.records.jackson.TestRecords.SingleObject
+import static TestRecords.DateTime
+import static TestRecords.MultipleConstructor
+import static TestRecords.NonRecord
+import static TestRecords.SingleEnum
+import static TestRecords.SingleInteger
+import static TestRecords.SingleIntegerWrapper
+import static TestRecords.SingleList
+import static TestRecords.SingleNested
+import static TestRecords.SingleObject
 import static java.time.DayOfWeek.THURSDAY
 import static java.time.Month.JANUARY
 import static java.time.Month.OCTOBER
