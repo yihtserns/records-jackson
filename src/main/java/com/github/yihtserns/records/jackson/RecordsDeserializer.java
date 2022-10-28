@@ -87,7 +87,7 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
         Class<?> recordType = context.getContextualType().getRawClass();
         Constructor<?>[] constructors = recordType.getConstructors();
 
-        if (!Record.class.isAssignableFrom(recordType)) {
+        if (!recordType.isRecord()) {
             throw new UnsupportedOperationException(recordType + " is not a record class!");
         }
         if (constructors.length != 1) {
