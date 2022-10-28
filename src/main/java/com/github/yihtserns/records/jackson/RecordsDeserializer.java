@@ -30,19 +30,17 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> implements ContextualDeserializer {
 
-    private Constructor<T> constructor;
-
     public RecordsDeserializer() {
-        this(Record.class, null);
+        this(Record.class);
     }
 
-    private RecordsDeserializer(Class<?> type, Constructor<T> constructor) {
+    private RecordsDeserializer(Class<?> type) {
         super(type);
-        this.constructor = constructor;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
             return (T) context.handleUnexpectedToken(handledType(), parser);
         }
 
-        RecordComponent[] recordComponents = constructor.getDeclaringClass().getRecordComponents();
+        RecordComponent[] recordComponents = handledType().getRecordComponents();
         ArrayNode arrayNode = parser.readValueAsTree();
         if (recordComponents.length != arrayNode.size()) {
             throw new InvalidFormatException(
@@ -72,12 +70,18 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
         }
 
         try {
-            return constructor.newInstance(entries.toArray());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+            Constructor<T> canonicalConstructor = ((Class<T>) handledType()).getConstructor(
+                    Arrays.stream(recordComponents)
+                            .map(RecordComponent::getType)
+                            .toArray(Class[]::new));
+
+            return canonicalConstructor.newInstance(entries.toArray());
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException ex) {
             throw new RuntimeException(ex);
         } catch (RuntimeException ex) {
             throw new RuntimeException(
-                    String.format("Failed to invoke constructor '%s' using: %s", constructor, entries),
+                    String.format("Failed to invoke canonical constructor using: %s", entries),
                     ex);
         }
     }
@@ -85,18 +89,10 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext context, BeanProperty property) {
         Class<?> recordType = context.getContextualType().getRawClass();
-        Constructor<?>[] constructors = recordType.getConstructors();
-
         if (!recordType.isRecord()) {
             throw new UnsupportedOperationException(recordType + " is not a record class!");
         }
-        if (constructors.length != 1) {
-            throw new UnsupportedOperationException(String.format(
-                    "Only supporting Records with 1 constructor - %s has %s",
-                    recordType,
-                    constructors.length));
-        }
 
-        return new RecordsDeserializer<T>(recordType, (Constructor) constructors[0]);
+        return new RecordsDeserializer<T>(recordType);
     }
 }

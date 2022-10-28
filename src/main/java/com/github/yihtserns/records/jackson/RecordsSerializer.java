@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
@@ -35,18 +34,9 @@ public class RecordsSerializer extends StdSerializer<Record> {
 
     @Override
     public void serialize(Record record, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        Class<? extends Record> recordType = record.getClass();
-        Constructor<?>[] constructors = recordType.getConstructors();
-        if (constructors.length != 1) {
-            throw new UnsupportedOperationException(String.format(
-                    "Only supporting Records with 1 constructor - %s has %s",
-                    recordType,
-                    constructors.length));
-        }
-
         try {
             List<Object> entries = new ArrayList<>();
-            for (RecordComponent recordComponent : recordType.getRecordComponents()) {
+            for (RecordComponent recordComponent : record.getClass().getRecordComponents()) {
                 entries.add(recordComponent.getAccessor().invoke(record));
             }
 

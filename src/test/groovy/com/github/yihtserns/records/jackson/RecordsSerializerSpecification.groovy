@@ -7,6 +7,7 @@ import spock.lang.Specification
 import java.time.Year
 import java.time.ZoneId
 
+import static com.github.yihtserns.records.jackson.TestRecords.DateTime
 import static com.github.yihtserns.records.jackson.TestRecords.MultipleConstructor
 import static com.github.yihtserns.records.jackson.TestRecords.NonRecord
 import static com.github.yihtserns.records.jackson.TestRecords.SingleEnum
@@ -41,19 +42,9 @@ class RecordsSerializerSpecification extends Specification {
         [JANUARY.name()]                                                                         | new SingleEnum(JANUARY)
         [[9]]                                                                                    | new SingleNested(new SingleInteger(9))
         [[[1], [2], [3]]]                                                                        | new SingleList([new SingleInteger(1), new SingleInteger(2), new SingleInteger(3)])
-        [2022, OCTOBER.name(), 27, THURSDAY.name(), 10, 32, 31.401, -3, 0.5, "America/St_Johns"] | new TestRecords.DateTime(Year.of(2022), OCTOBER, 27, THURSDAY, 10, 32, 31.401d, -3, 0.5f, ZoneId.of("America/St_Johns"))
-    }
-
-    /**
-     * Keeping it VERY simple!
-     */
-    def "does not support Record with multiple constructors"() {
-        when:
-        objectMapper.writeValueAsString(new MultipleConstructor(1))
-
-        then:
-        def ex = thrown(JsonMappingException)
-        ex.cause.message == "Only supporting Records with 1 constructor - ${MultipleConstructor} has 2"
+        [2022, OCTOBER.name(), 27, THURSDAY.name(), 10, 32, 31.401, -3, 0.5, "America/St_Johns"] | new DateTime(Year.of(2022), OCTOBER, 27, THURSDAY, 10, 32, 31.401d, -3, 0.5f, ZoneId.of("America/St_Johns"))
+        [1]                                                                                      | new MultipleConstructor(1)
+        [3]                                                                                      | new MultipleConstructor(1, 2)
     }
 
     def "should throw for non-Record class"() {

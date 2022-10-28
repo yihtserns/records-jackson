@@ -1,6 +1,7 @@
 package com.github.yihtserns.records.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import spock.lang.Specification
 
@@ -72,13 +73,19 @@ class RecordsDeserializerSpecification extends Specification {
     /**
      * Keeping it VERY simple!
      */
-    def "does not support Record with multiple constructors"() {
-        when:
-        objectMapper.readValue("[1]", MultipleConstructor)
+    def "only support canonical constructor when there's multiple constructors"() {
+        when: "canonical constructor: 1 parameters"
+        def record = objectMapper.readValue("[1]", MultipleConstructor)
 
         then:
-        def ex = thrown(UnsupportedOperationException)
-        ex.message == "Only supporting Records with 1 constructor - ${MultipleConstructor} has 2"
+        record == new MultipleConstructor(1)
+
+        when: "non-canonical constructor: 2 parameters"
+        objectMapper.readValue("[1, 2]", MultipleConstructor)
+
+        then:
+        def ex = thrown(InvalidFormatException)
+        ex.message.startsWith "Expected JSON array of size 1, but was: [1,2]"
     }
 
     def "should throw for non-Record class"() {
