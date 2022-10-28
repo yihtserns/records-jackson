@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,12 +51,12 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
             return (T) context.handleUnexpectedToken(handledType(), parser);
         }
 
-        Parameter[] parameters = constructor.getParameters();
+        RecordComponent[] recordComponents = constructor.getDeclaringClass().getRecordComponents();
         ArrayNode arrayNode = parser.readValueAsTree();
-        if (parameters.length != arrayNode.size()) {
+        if (recordComponents.length != arrayNode.size()) {
             throw new InvalidFormatException(
                     parser,
-                    String.format("Expected JSON array of size %s, but was: %s", parameters.length, arrayNode),
+                    String.format("Expected JSON array of size %s, but was: %s", recordComponents.length, arrayNode),
                     arrayNode,
                     handledType());
         }
@@ -64,11 +64,11 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
         List<Object> entries = new ArrayList<>();
         for (int i = 0; i < arrayNode.size(); i++) {
             JsonNode jsonNode = arrayNode.get(i);
-            Parameter parameter = parameters[i];
+            RecordComponent recordComponent = recordComponents[i];
 
             entries.add(context.readTreeAsValue(
                     jsonNode,
-                    context.getTypeFactory().constructType(parameter.getParameterizedType())));
+                    context.getTypeFactory().constructType(recordComponent.getGenericType())));
         }
 
         try {

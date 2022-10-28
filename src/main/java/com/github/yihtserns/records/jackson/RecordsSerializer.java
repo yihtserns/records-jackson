@@ -23,8 +23,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,20 +44,15 @@ public class RecordsSerializer extends StdSerializer<Record> {
                     constructors.length));
         }
 
-        Constructor<?> constructor = constructors[0];
-        Parameter[] parameters = constructor.getParameters();
-
         try {
             List<Object> entries = new ArrayList<>();
-            for (Parameter parameter : parameters) {
-                Method accessor = recordType.getMethod(parameter.getName());
-
-                entries.add(accessor.invoke(record));
+            for (RecordComponent recordComponent : recordType.getRecordComponents()) {
+                entries.add(recordComponent.getAccessor().invoke(record));
             }
 
             JsonSerializer<Object> listSerializer = provider.findValueSerializer(List.class);
             listSerializer.serialize(entries, generator, provider);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+        } catch (IllegalAccessException | InvocationTargetException ex) {
             // Should not happen
             throw new RuntimeException(ex);
         }
