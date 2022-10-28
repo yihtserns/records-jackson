@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import spock.lang.Specification
 
+import java.time.Year
+import java.time.ZoneId
+
+import static com.github.yihtserns.records.jackson.TestRecords.DateTime
 import static com.github.yihtserns.records.jackson.TestRecords.MultipleConstructor
 import static com.github.yihtserns.records.jackson.TestRecords.NonRecord
 import static com.github.yihtserns.records.jackson.TestRecords.SingleEnum
@@ -12,11 +16,13 @@ import static com.github.yihtserns.records.jackson.TestRecords.SingleIntegerWrap
 import static com.github.yihtserns.records.jackson.TestRecords.SingleList
 import static com.github.yihtserns.records.jackson.TestRecords.SingleNested
 import static com.github.yihtserns.records.jackson.TestRecords.SingleObject
+import static java.time.DayOfWeek.THURSDAY
 import static java.time.Month.JANUARY
+import static java.time.Month.OCTOBER
 
 class RecordsDeserializerSpecification extends Specification {
 
-    private def objectMapper = new ObjectMapper()
+    private def objectMapper = new ObjectMapper().findAndRegisterModules()
 
     def "can deserialize JSON array to Record"() {
         given:
@@ -29,16 +35,17 @@ class RecordsDeserializerSpecification extends Specification {
         record == expectedRecord
 
         where:
-        recordType           | jsonValue         | expectedRecord
-        SingleInteger        | [1]               | new SingleInteger(1)
-        SingleIntegerWrapper | [1]               | new SingleIntegerWrapper(1)
-        SingleObject         | [1]               | new SingleObject(1)
-        SingleObject         | [1.1]             | new SingleObject(1.1d)
-        SingleObject         | ["1.1"]           | new SingleObject("1.1")
-        SingleObject         | [true]            | new SingleObject(true)
-        SingleEnum           | [JANUARY.name()]  | new SingleEnum(JANUARY)
-        SingleNested         | [[9]]             | new SingleNested(new SingleInteger(9))
-        SingleList           | [[[1], [2], [3]]] | new SingleList([new SingleInteger(1), new SingleInteger(2), new SingleInteger(3)])
+        recordType           | jsonValue                                                                                | expectedRecord
+        SingleInteger        | [1]                                                                                      | new SingleInteger(1)
+        SingleIntegerWrapper | [1]                                                                                      | new SingleIntegerWrapper(1)
+        SingleObject         | [1]                                                                                      | new SingleObject(1)
+        SingleObject         | [1.1]                                                                                    | new SingleObject(1.1d)
+        SingleObject         | ["1.1"]                                                                                  | new SingleObject("1.1")
+        SingleObject         | [true]                                                                                   | new SingleObject(true)
+        SingleEnum           | [JANUARY.name()]                                                                         | new SingleEnum(JANUARY)
+        SingleNested         | [[9]]                                                                                    | new SingleNested(new SingleInteger(9))
+        SingleList           | [[[1], [2], [3]]]                                                                        | new SingleList([new SingleInteger(1), new SingleInteger(2), new SingleInteger(3)])
+        DateTime             | [2022, OCTOBER.name(), 27, THURSDAY.name(), 10, 32, 31.401, -3, 0.5, "America/St_Johns"] | new DateTime(Year.of(2022), OCTOBER, 27, THURSDAY, 10, 32, 31.401d, -3, 0.5f, ZoneId.of("America/St_Johns"))
     }
 
     def "should throw when trying to deserialize invalid JSON to Record"() {

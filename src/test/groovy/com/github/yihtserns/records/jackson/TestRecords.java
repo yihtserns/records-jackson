@@ -18,7 +18,10 @@ package com.github.yihtserns.records.jackson;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.time.DayOfWeek;
 import java.time.Month;
+import java.time.Year;
+import java.time.ZoneId;
 import java.util.List;
 
 public class TestRecords {
@@ -51,6 +54,20 @@ public class TestRecords {
     @JsonDeserialize(using = RecordsDeserializer.class)
     @JsonSerialize(using = RecordsSerializer.class)
     public record SingleList(List<SingleInteger> values) {
+    }
+
+    @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
+    public record DateTime(Year year,
+                           Month month,
+                           int day,
+                           DayOfWeek dayOfWeek,
+                           int hour,
+                           int minute,
+                           double seconds,
+                           int milliseconds,
+                           float nanoseconds,
+                           ZoneId timeZone) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
