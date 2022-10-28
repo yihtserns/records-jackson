@@ -16,6 +16,7 @@
 package com.github.yihtserns.records.jackson;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.time.Month;
 import java.util.List;
@@ -23,30 +24,37 @@ import java.util.List;
 public class TestRecords {
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record SingleInteger(int value) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record SingleIntegerWrapper(Integer value) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record SingleObject(Object value) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record SingleEnum(Month value) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record SingleNested(SingleInteger value) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record SingleList(List<SingleInteger> values) {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public record MultipleConstructor(int value) {
 
         public MultipleConstructor(int value, int value2) {
@@ -55,6 +63,7 @@ public class TestRecords {
     }
 
     @JsonDeserialize(using = RecordsDeserializer.class)
+    @JsonSerialize(using = RecordsSerializer.class)
     public static class NonRecord {
     }
 }
