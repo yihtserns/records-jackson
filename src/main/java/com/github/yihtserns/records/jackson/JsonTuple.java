@@ -31,8 +31,8 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@JsonDeserialize(using = RecordsDeserializer.class)
-@JsonSerialize(using = RecordsSerializer.class)
+@JsonDeserialize(using = RecordsTupleDeserializer.class)
+@JsonSerialize(using = RecordsTupleSerializer.class)
 @JacksonAnnotationsInside
 public @interface JsonTuple {
 }

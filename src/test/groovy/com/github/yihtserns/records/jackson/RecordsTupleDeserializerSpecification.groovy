@@ -21,7 +21,7 @@ import static java.time.DayOfWeek.THURSDAY
 import static java.time.Month.JANUARY
 import static java.time.Month.OCTOBER
 
-class RecordsDeserializerSpecification extends Specification {
+class RecordsTupleDeserializerSpecification extends Specification {
 
     private def objectMapper = new ObjectMapper().findAndRegisterModules()
 

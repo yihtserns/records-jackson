@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Serializes the Record class into (unnamed) tuple (in the form of JSON array).
+ *
  * @see JsonTuple
  */
-public class RecordsSerializer extends StdSerializer<Record> {
+public class RecordsTupleSerializer extends StdSerializer<Record> {
 
-    protected RecordsSerializer() {
+    protected RecordsTupleSerializer() {
         super(Record.class);
     }
 

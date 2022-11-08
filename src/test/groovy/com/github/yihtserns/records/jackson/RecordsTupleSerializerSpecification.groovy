@@ -20,7 +20,7 @@ import static java.time.DayOfWeek.THURSDAY
 import static java.time.Month.JANUARY
 import static java.time.Month.OCTOBER
 
-class RecordsSerializerSpecification extends Specification {
+class RecordsTupleSerializerSpecification extends Specification {
 
     private def objectMapper = new ObjectMapper().findAndRegisterModules()
 

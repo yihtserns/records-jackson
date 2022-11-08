@@ -34,15 +34,17 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Deserializes (unnamed) tuple (in the form of JSON array) into the Record class.
+ *
  * @see JsonTuple
  */
-public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> implements ContextualDeserializer {
+public class RecordsTupleDeserializer<T extends Record> extends StdDeserializer<T> implements ContextualDeserializer {
 
-    public RecordsDeserializer() {
+    public RecordsTupleDeserializer() {
         this(Record.class);
     }
 
-    private RecordsDeserializer(Class<?> type) {
+    private RecordsTupleDeserializer(Class<?> type) {
         super(type);
     }
 
@@ -96,6 +98,6 @@ public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> im
             throw new UnsupportedOperationException(recordType + " is not a record class!");
         }
 
-        return new RecordsDeserializer<T>(recordType);
+        return new RecordsTupleDeserializer<T>(recordType);
     }
 }
