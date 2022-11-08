@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @see JsonTuple
+ */
 public class RecordsDeserializer<T extends Record> extends StdDeserializer<T> implements ContextualDeserializer {
 
     public RecordsDeserializer() {

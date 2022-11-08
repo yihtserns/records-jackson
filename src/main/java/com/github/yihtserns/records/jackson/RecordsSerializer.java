@@ -26,6 +26,9 @@ import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @see JsonTuple
+ */
 public class RecordsSerializer extends StdSerializer<Record> {
 
     protected RecordsSerializer() {

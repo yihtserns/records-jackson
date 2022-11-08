@@ -15,9 +15,6 @@
  */
 package com.github.yihtserns.records.jackson;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.Year;
@@ -26,38 +23,31 @@ import java.util.List;
 
 public class TestRecords {
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record SingleInteger(int value) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record SingleIntegerWrapper(Integer value) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record SingleObject(Object value) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record SingleEnum(Month value) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record SingleNested(SingleInteger value) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record SingleList(List<SingleInteger> values) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record DateTime(Year year,
                            Month month,
                            int day,
@@ -70,8 +60,7 @@ public class TestRecords {
                            ZoneId timeZone) {
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public record MultipleConstructor(int value) {
 
         public MultipleConstructor(int value, int value2) {
@@ -79,8 +68,7 @@ public class TestRecords {
         }
     }
 
-    @JsonDeserialize(using = RecordsDeserializer.class)
-    @JsonSerialize(using = RecordsSerializer.class)
+    @JsonTuple
     public static class NonRecord {
     }
 }
